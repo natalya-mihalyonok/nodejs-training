@@ -1,6 +1,6 @@
 import { prepareErrorMessage } from '../../utils/errors_utils';
-import { UserModel } from '../../models/user_model';
-import { UserService } from '../../services/user_service';
+import { UserModel } from '../../models/index';
+import { UserService } from '../../services/index';
 
 const userService = new UserService(UserModel);
 
