@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { generateId } from '../utils/data_utils';
+import { generateId, encryptValue } from '../utils/data_utils';
 
 export class UserService {
     constructor(userModel) {
@@ -9,10 +9,13 @@ export class UserService {
     async addUser(user) {
         const id = generateId();
         try {
-            return await this.userModel.create({
+            const password = encryptValue(user.password);
+            user = await this.userModel.create({
                 id,
-                ...user
+                ...user,
+                password
             });
+            return user.id;
         } catch (err) {
             throw new Error(err);
         }
@@ -32,7 +35,8 @@ export class UserService {
     async getUser(id) {
         try {
             return await this.userModel.findOne({
-                where: { id, isDeleted: false }
+                where: { id, isDeleted: false },
+                attributes: ['login', 'age', 'id']
             });
         } catch (err) {
             throw new Error(err);
@@ -44,7 +48,7 @@ export class UserService {
             await this._checkUserExist(user.id);
             await this.userModel.update({
                 login: user.login,
-                password: user.password,
+                password: encryptValue(user.password),
                 age: user.age
             }, {
                 where: {
@@ -66,7 +70,8 @@ export class UserService {
                     },
                     isDeleted: false },
                 order: ['login'],
-                limit
+                limit,
+                attributes: ['login', 'age', 'id']
             });
         } catch (err) {
             throw new Error(err);
@@ -78,7 +83,7 @@ export class UserService {
             return await this.userModel.findOne({
                 where: {
                     login,
-                    password,
+                    password: encryptValue(password),
                     isDeleted: false
                 }
             });

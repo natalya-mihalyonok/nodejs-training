@@ -27,6 +27,7 @@
     "@babel/plugin-transform-runtime": "7.14.*",
     "@babel/runtime": "7.14.*",
     "cors": "2.8.*",
+    "crypto-js": "^4.1.1",
     "csvtojson": "2.0.*",
     "dotenv": "10.0.*",
     "express": "4.17.*",
